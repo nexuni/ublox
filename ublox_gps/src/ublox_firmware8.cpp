@@ -152,6 +152,8 @@ bool UbloxFirmware8::configureUblox(std::shared_ptr<ublox_gps::Gps> gps) {
     throw std::runtime_error("Failed to read the GNSS config.");
   }
 
+  ublox_msgs::msg::CfgVALSET cfg_valset_gnss;
+
   // Then, check the configuration for each GNSS. If it is different, change it.
   bool correct = true;
   for (size_t i = 0; i < cfg_gnss.blocks.size(); i++) {  // NOLINT(modernize-loop-convert)
@@ -162,24 +164,43 @@ bool UbloxFirmware8::configureUblox(std::shared_ptr<ublox_gps::Gps> gps) {
       cfg_gnss.blocks[i].flags =
           (cfg_gnss.blocks[i].flags & ~ublox_msgs::msg::CfgGNSSBlock::FLAGS_ENABLE) | enable_gps_;
       RCLCPP_DEBUG(node_->get_logger(), "GPS Configuration is different");
+
+      ublox_msgs::msg::CfgVALConfBlock conf_block;
+      conf_block.key_id = 271646751;
+      conf_block.value = (cfg_gnss.blocks[i].flags & ~ublox_msgs::msg::CfgGNSSBlock::FLAGS_ENABLE) | enable_gps_;
+      cfg_valset_gnss.cfgData.push_back(conf_block);
+
     } else if (block.gnss_id == ublox_msgs::msg::CfgGNSSBlock::GNSS_ID_SBAS
                && getRosBoolean(node_, "gnss.sbas") != (block.flags & ublox_msgs::msg::CfgGNSSBlock::FLAGS_ENABLE)) {
       correct = false;
       cfg_gnss.blocks[i].flags =
           (cfg_gnss.blocks[i].flags & ~ublox_msgs::msg::CfgGNSSBlock::FLAGS_ENABLE) | getRosBoolean(node_, "gnss.sbas");
       RCLCPP_DEBUG(node_->get_logger(), "SBAS Configuration is different");
+
     } else if (block.gnss_id == ublox_msgs::msg::CfgGNSSBlock::GNSS_ID_GALILEO
                && enable_galileo_ != (block.flags & ublox_msgs::msg::CfgGNSSBlock::FLAGS_ENABLE)) {
       correct = false;
       cfg_gnss.blocks[i].flags =
           (cfg_gnss.blocks[i].flags & ~ublox_msgs::msg::CfgGNSSBlock::FLAGS_ENABLE) | enable_galileo_;
       RCLCPP_DEBUG(node_->get_logger(), "Galileo GNSS Configuration is different");
+
+      ublox_msgs::msg::CfgVALConfBlock conf_block;
+      conf_block.key_id = 271646753;
+      conf_block.value = (cfg_gnss.blocks[i].flags & ~ublox_msgs::msg::CfgGNSSBlock::FLAGS_ENABLE) | enable_galileo_;
+      cfg_valset_gnss.cfgData.push_back(conf_block);
+
     } else if (block.gnss_id == ublox_msgs::msg::CfgGNSSBlock::GNSS_ID_BEIDOU
                && enable_beidou_ != (block.flags & ublox_msgs::msg::CfgGNSSBlock::FLAGS_ENABLE)) {
       correct = false;
       cfg_gnss.blocks[i].flags =
           (cfg_gnss.blocks[i].flags & ~ublox_msgs::msg::CfgGNSSBlock::FLAGS_ENABLE) | enable_beidou_;
       RCLCPP_DEBUG(node_->get_logger(), "BeiDou Configuration is different");
+
+      ublox_msgs::msg::CfgVALConfBlock conf_block;
+      conf_block.key_id = 271646754;
+      conf_block.value = (cfg_gnss.blocks[i].flags & ~ublox_msgs::msg::CfgGNSSBlock::FLAGS_ENABLE) | enable_beidou_;
+      cfg_valset_gnss.cfgData.push_back(conf_block);
+
     } else if (block.gnss_id == ublox_msgs::msg::CfgGNSSBlock::GNSS_ID_IMES
                && enable_imes_ != (block.flags & ublox_msgs::msg::CfgGNSSBlock::FLAGS_ENABLE)) {
       correct = false;
@@ -201,12 +222,24 @@ bool UbloxFirmware8::configureUblox(std::shared_ptr<ublox_gps::Gps> gps) {
         // Only change sig cfg if enabling
         cfg_gnss.blocks[i].flags |= qzss_sig_cfg_;
       }
+
+      ublox_msgs::msg::CfgVALConfBlock conf_block;
+      conf_block.key_id = 271646756;
+      conf_block.value = (cfg_gnss.blocks[i].flags & ~ublox_msgs::msg::CfgGNSSBlock::FLAGS_ENABLE) | enable_qzss_;
+      cfg_valset_gnss.cfgData.push_back(conf_block);
+
     } else if (block.gnss_id == ublox_msgs::msg::CfgGNSSBlock::GNSS_ID_GLONASS
                && enable_glonass_ != (block.flags & ublox_msgs::msg::CfgGNSSBlock::FLAGS_ENABLE)) {
       correct = false;
       cfg_gnss.blocks[i].flags =
           (cfg_gnss.blocks[i].flags & ~ublox_msgs::msg::CfgGNSSBlock::FLAGS_ENABLE) | enable_glonass_;
       RCLCPP_DEBUG(node_->get_logger(), "GLONASS Configuration is different");
+
+      ublox_msgs::msg::CfgVALConfBlock conf_block;
+      conf_block.key_id = 271646757;
+      conf_block.value = (cfg_gnss.blocks[i].flags & ~ublox_msgs::msg::CfgGNSSBlock::FLAGS_ENABLE) | enable_glonass_;
+      cfg_valset_gnss.cfgData.push_back(conf_block);
+
     }
   }
 
@@ -214,7 +247,7 @@ bool UbloxFirmware8::configureUblox(std::shared_ptr<ublox_gps::Gps> gps) {
   // since this requires a cold reset
   if (correct) {
     RCLCPP_DEBUG(node_->get_logger(), "U-Blox GNSS configuration is correct. GNSS not re-configured.");
-  } else if (!gps->configGnss(cfg_gnss, std::chrono::seconds(15))) {
+  } else if (!gps->configGnss(cfg_valset_gnss, std::chrono::seconds(15))) {
     throw std::runtime_error(std::string("Failed to cold reset device ") +
                              "after configuring GNSS");
   }

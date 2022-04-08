@@ -530,7 +530,7 @@ bool Gps::poll(ConfigT& message,
 template <typename T>
 bool Gps::read(T& message, const std::chrono::milliseconds& timeout) {
   if (!worker_) {
-    return false;
+    return false; 
   }
   return callbacks_.read(message, timeout);
 }
