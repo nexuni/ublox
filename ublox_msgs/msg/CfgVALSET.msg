@@ -10,4 +10,4 @@ uint8 LAYERS = 7              # 0 ram, 1 bbr, 2 flask, 7 default
 
 uint8[2] reserved1
 
-CfgVALConfBlock[] cfgData
+CfgVALConfBlock[] cfg_data
