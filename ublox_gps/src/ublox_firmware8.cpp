@@ -8,6 +8,8 @@
 #include <sensor_msgs/msg/nav_sat_status.hpp>
 
 #include <ublox_msgs/msg/cfg_gnss_block.hpp>
+#include <ublox_msgs/msg/cfg_valset.hpp>
+#include <ublox_msgs/msg/cfg_val_conf_block.hpp>
 #include <ublox_msgs/msg/mon_hw.hpp>
 #include <ublox_msgs/msg/nav_pvt.hpp>
 #include <ublox_msgs/msg/nav_sat.hpp>
