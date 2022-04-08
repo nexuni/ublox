@@ -42,6 +42,8 @@ set(msg_files
   "msg/CfgSBAS.msg"
   "msg/CfgTMODE3.msg"
   "msg/CfgUSB.msg"
+  "msg/CfgVALSET.msg"
+  "msg/CfgVALConfBlock.msg"
   "msg/EsfINS.msg"
   "msg/EsfMEAS.msg"
   "msg/EsfRAWBlock.msg"
