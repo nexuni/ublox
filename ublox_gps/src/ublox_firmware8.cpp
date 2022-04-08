@@ -178,7 +178,7 @@ bool UbloxFirmware8::configureUblox(std::shared_ptr<ublox_gps::Gps> gps) {
 
     } else if (block.gnss_id == ublox_msgs::msg::CfgGNSSBlock::GNSS_ID_SBAS
                && getRosBoolean(node_, "gnss.sbas") != (block.flags & ublox_msgs::msg::CfgGNSSBlock::FLAGS_ENABLE)) {
-      correct = false;
+      correct = true;
       cfg_gnss.blocks[i].flags =
           (cfg_gnss.blocks[i].flags & ~ublox_msgs::msg::CfgGNSSBlock::FLAGS_ENABLE) | getRosBoolean(node_, "gnss.sbas");
       RCLCPP_DEBUG(node_->get_logger(), "SBAS Configuration is different");
@@ -211,7 +211,7 @@ bool UbloxFirmware8::configureUblox(std::shared_ptr<ublox_gps::Gps> gps) {
 
     } else if (block.gnss_id == ublox_msgs::msg::CfgGNSSBlock::GNSS_ID_IMES
                && enable_imes_ != (block.flags & ublox_msgs::msg::CfgGNSSBlock::FLAGS_ENABLE)) {
-      correct = false;
+      correct = true;
       cfg_gnss.blocks[i].flags =
           (cfg_gnss.blocks[i].flags & ~ublox_msgs::msg::CfgGNSSBlock::FLAGS_ENABLE) | enable_imes_;
     } else if (block.gnss_id == ublox_msgs::msg::CfgGNSSBlock::GNSS_ID_QZSS
@@ -221,7 +221,7 @@ bool UbloxFirmware8::configureUblox(std::shared_ptr<ublox_gps::Gps> gps) {
       RCLCPP_DEBUG(node_->get_logger(), "QZSS Configuration is different %u, %u",
                 block.flags & ublox_msgs::msg::CfgGNSSBlock::FLAGS_ENABLE,
                 enable_qzss_);
-      correct = false;
+      correct = true;
       RCLCPP_DEBUG(node_->get_logger(), "QZSS Configuration: %u", block.flags);
       cfg_gnss.blocks[i].flags =
           (cfg_gnss.blocks[i].flags & ~ublox_msgs::msg::CfgGNSSBlock::FLAGS_ENABLE) | enable_qzss_;
@@ -231,11 +231,11 @@ bool UbloxFirmware8::configureUblox(std::shared_ptr<ublox_gps::Gps> gps) {
         cfg_gnss.blocks[i].flags |= qzss_sig_cfg_;
       }
 
-      cfg_valset_gnss.cfg_data.push_back(16);
-      cfg_valset_gnss.cfg_data.push_back(49);
-      cfg_valset_gnss.cfg_data.push_back(0);
-      cfg_valset_gnss.cfg_data.push_back(36);
-      cfg_valset_gnss.cfg_data.push_back((cfg_gnss.blocks[i].flags & ~ublox_msgs::msg::CfgGNSSBlock::FLAGS_ENABLE) | enable_qzss_);
+      // cfg_valset_gnss.cfg_data.push_back(16);
+      // cfg_valset_gnss.cfg_data.push_back(49);
+      // cfg_valset_gnss.cfg_data.push_back(0);
+      // cfg_valset_gnss.cfg_data.push_back(36);
+      // cfg_valset_gnss.cfg_data.push_back((cfg_gnss.blocks[i].flags & ~ublox_msgs::msg::CfgGNSSBlock::FLAGS_ENABLE) | enable_qzss_);
 
     } else if (block.gnss_id == ublox_msgs::msg::CfgGNSSBlock::GNSS_ID_GLONASS
                && enable_glonass_ != (block.flags & ublox_msgs::msg::CfgGNSSBlock::FLAGS_ENABLE)) {
