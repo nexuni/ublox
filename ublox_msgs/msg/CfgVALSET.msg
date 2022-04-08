@@ -5,9 +5,9 @@
 uint8 CLASS_ID = 6
 uint8 MESSAGE_ID = 138
 
-uint8 VERSION = 0
-uint8 LAYERS = 7              # 0 ram, 1 bbr, 2 flask, 7 default
+uint8 version             # default 0
+uint8 layers              # 0 ram, 1 bbr, 2 flask, 7 default
 
 uint8[2] reserved1
 
-CfgVALConfBlock[] cfg_data
+uint8[] cfg_data

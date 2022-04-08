@@ -894,6 +894,41 @@ struct UbloxSerializer<ublox_msgs::msg::CfgTMODE3_<ContainerAllocator> > {
   }
 };
 
+///
+/// @brief Serializes the CfgGNSS message which has a repeated block.
+///
+template <typename ContainerAllocator>
+struct UbloxSerializer<ublox_msgs::msg::CfgVALSET_<ContainerAllocator> > {
+  inline static void read(const uint8_t *data, uint32_t count,
+                          ublox_msgs::msg::CfgVALSET_<ContainerAllocator> &m) {
+    UbloxIStream stream(const_cast<uint8_t *>(data), count);
+    stream.next(m.version);
+    stream.next(m.layers);
+    stream.next(m.reserved1[0]);
+    stream.next(m.reserved1[1]);
+    for (std::size_t i = 0; i < m.cfg_data.size(); ++i) {
+      deserialize(stream, m.cfg_data[i]);
+    }
+  }
+
+  inline static uint32_t serializedLength(const ublox_msgs::msg::CfgVALSET_<ContainerAllocator> &m) {
+    return 4 + 1 * m.cfg_data.size();
+  }
+
+  inline static void write(uint8_t *data, uint32_t size,
+                           const ublox_msgs::msg::CfgVALSET_<ContainerAllocator> &m) {
+    UbloxOStream stream(data, size);
+    stream.next(m.version);
+    stream.next(m.layers);
+    stream.next(m.reserved1[0]);
+    stream.next(m.reserved1[1]);
+    for (std::size_t i = 0; i < m.cfg_data.size(); ++i) {
+      serialize(stream, m.cfg_data[i]);
+    }
+  }
+};
+
+
 template <typename ContainerAllocator>
 struct UbloxSerializer<ublox_msgs::msg::EsfINS_<ContainerAllocator> > {
   inline static void read(const uint8_t *data, uint32_t count,
