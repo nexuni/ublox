@@ -391,7 +391,7 @@ bool Gps::disableUart1(ublox_msgs::msg::CfgPRT& prev_config) {
   payload.push_back(ublox_msgs::msg::CfgPRT::PORT_ID_UART1);
   if (!poll(ublox_msgs::msg::CfgPRT::CLASS_ID, ublox_msgs::msg::CfgPRT::MESSAGE_ID, payload)) {
     RCLCPP_ERROR(logger_, "disableUart: Could not poll UART1 CfgPRT");
-    return false;
+    return false; 
   }
   if (!read(prev_config, default_timeout_)) {
     RCLCPP_ERROR(logger_, "disableUart: Could not read polled UART1 CfgPRT message");
