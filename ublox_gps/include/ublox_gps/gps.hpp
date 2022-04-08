@@ -155,7 +155,7 @@ class Gps final {
    * @return true if the GNSS was configured, the device was reset, and the
    * I/O reset successfully
    */
-  bool configGnss(ublox_msgs::msg::CfgGNSS gnss,
+  bool configGnss(ublox_msgs::msg::CfgVALSET gnss,
                   const std::chrono::milliseconds& wait);
 
   /**

@@ -324,7 +324,7 @@ bool Gps::configReset(uint16_t nav_bbr_mask, uint16_t reset_mode) {
   return configure(rst, false);
 }
 
-bool Gps::configGnss(ublox_msgs::msg::CfgGNSS gnss,
+bool Gps::configGnss(ublox_msgs::msg::CfgVALSET gnss,
                      const std::chrono::milliseconds& wait) {
   // Configure the GNSS settingshttps://mail.google.com/mail/u/0/#inbox
   RCLCPP_DEBUG(logger_, "Re-configuring GNSS.");
