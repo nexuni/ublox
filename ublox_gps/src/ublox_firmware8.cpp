@@ -178,7 +178,7 @@ bool UbloxFirmware8::configureUblox(std::shared_ptr<ublox_gps::Gps> gps) {
 
     } else if (block.gnss_id == ublox_msgs::msg::CfgGNSSBlock::GNSS_ID_SBAS
                && getRosBoolean(node_, "gnss.sbas") != (block.flags & ublox_msgs::msg::CfgGNSSBlock::FLAGS_ENABLE)) {
-      correct = true;
+      correct = true; // Work around, need investigation
       cfg_gnss.blocks[i].flags =
           (cfg_gnss.blocks[i].flags & ~ublox_msgs::msg::CfgGNSSBlock::FLAGS_ENABLE) | getRosBoolean(node_, "gnss.sbas");
       RCLCPP_DEBUG(node_->get_logger(), "SBAS Configuration is different");
@@ -198,7 +198,7 @@ bool UbloxFirmware8::configureUblox(std::shared_ptr<ublox_gps::Gps> gps) {
 
     } else if (block.gnss_id == ublox_msgs::msg::CfgGNSSBlock::GNSS_ID_BEIDOU
                && enable_beidou_ != (block.flags & ublox_msgs::msg::CfgGNSSBlock::FLAGS_ENABLE)) {
-      correct = false;
+      correct = false; 
       cfg_gnss.blocks[i].flags =
           (cfg_gnss.blocks[i].flags & ~ublox_msgs::msg::CfgGNSSBlock::FLAGS_ENABLE) | enable_beidou_;
       RCLCPP_DEBUG(node_->get_logger(), "BeiDou Configuration is different");
@@ -211,7 +211,7 @@ bool UbloxFirmware8::configureUblox(std::shared_ptr<ublox_gps::Gps> gps) {
 
     } else if (block.gnss_id == ublox_msgs::msg::CfgGNSSBlock::GNSS_ID_IMES
                && enable_imes_ != (block.flags & ublox_msgs::msg::CfgGNSSBlock::FLAGS_ENABLE)) {
-      correct = true;
+      correct = true; // Work around, need investigation
       cfg_gnss.blocks[i].flags =
           (cfg_gnss.blocks[i].flags & ~ublox_msgs::msg::CfgGNSSBlock::FLAGS_ENABLE) | enable_imes_;
     } else if (block.gnss_id == ublox_msgs::msg::CfgGNSSBlock::GNSS_ID_QZSS
@@ -221,7 +221,7 @@ bool UbloxFirmware8::configureUblox(std::shared_ptr<ublox_gps::Gps> gps) {
       RCLCPP_DEBUG(node_->get_logger(), "QZSS Configuration is different %u, %u",
                 block.flags & ublox_msgs::msg::CfgGNSSBlock::FLAGS_ENABLE,
                 enable_qzss_);
-      correct = true;
+      correct = true; // Work around, need investigation
       RCLCPP_DEBUG(node_->get_logger(), "QZSS Configuration: %u", block.flags);
       cfg_gnss.blocks[i].flags =
           (cfg_gnss.blocks[i].flags & ~ublox_msgs::msg::CfgGNSSBlock::FLAGS_ENABLE) | enable_qzss_;
